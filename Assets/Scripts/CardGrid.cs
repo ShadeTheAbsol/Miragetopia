@@ -14,8 +14,6 @@ public class CardGrid : MonoBehaviour
 
     public void SetupCardGrid(int columns, int rows)
     {
-        Debug.Log("Columns: " + columns);
-        Debug.Log("Rows: " + rows);
         // Get screen width and screen height
         float screenHeight = Camera.main.orthographicSize * 2;
         float screenWidth = screenHeight * Camera.main.aspect;

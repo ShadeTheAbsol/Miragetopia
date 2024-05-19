@@ -3,18 +3,19 @@ using UnityEngine;
 public class CardGrid : MonoBehaviour
 {
     public GameObject cardPrefab;
-    public int columns; // Card Columns
-    public int rows; // Card Rows
+
     public float screenOffset; // Offset between edge of the screen and cards
     public float cardGap; // Gap between cards
 
     void Start()
     {
-        SetupCardGrid();
+
     }
 
-    private void SetupCardGrid()
+    public void SetupCardGrid(int columns, int rows)
     {
+        Debug.Log("Columns: " + columns);
+        Debug.Log("Rows: " + rows);
         // Get screen width and screen height
         float screenHeight = Camera.main.orthographicSize * 2;
         float screenWidth = screenHeight * Camera.main.aspect;

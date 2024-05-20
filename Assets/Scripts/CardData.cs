@@ -27,7 +27,7 @@ public class CardData : MonoBehaviour
         cardSprite = data.art;
 
         transform.name = cardTitle + " Card";
-        transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = cardSprite;
+        transform.GetChild(0).GetChild(4).GetComponent<SpriteRenderer>().sprite = cardSprite;
     }
 
     public string GetCardName()

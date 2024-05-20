@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Audio;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,12 +13,31 @@ public class GameManager : MonoBehaviour
     public TMP_InputField gridColumnsInput;
     public TMP_InputField gridRowsInput;
     public TextMeshProUGUI errorText;
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI scoreMultiplierText;
+    public int scorePerMatch;
+
+    public GameObject mainMenuScreen;
+    public GameObject PauseScreen;
+    public GameObject GameOverScreen;
+    public TextMeshProUGUI finalScoreText;
+
+    public AudioMixer masterMixer;
+    public AudioClip cardFlipSFX;
+    public AudioClip cardMatchCorrectSFX;
+    public AudioClip cardMatchFailSFX;
+    public AudioClip gameOverSFX;
+
 
     private CardGrid cardOrganizer;
     private List<GameObject> cards;
     //Cards used to check for matching cards
     private GameObject cardOne;
     private GameObject cardTwo;
+    private int cardMatches;
+    private int score;
+    private int scoreMultiplier;
+    private AudioSource SFXPlayer;
 
     private void Awake()
     {
@@ -31,6 +51,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         cardOrganizer = cardsContainer.GetComponent<CardGrid>();
+        cardMatches = 0;
+        score = 0;
+        scoreMultiplier = 1;
+        SFXPlayer = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -61,6 +85,7 @@ public class GameManager : MonoBehaviour
             errorText.text = "";
             cardOrganizer.SetupCardGrid(columns, rows);
             SetupGame();
+            mainMenuScreen.SetActive(false);
         }
         else
         {
@@ -154,11 +179,24 @@ public class GameManager : MonoBehaviour
             {
                 cardOne.GetComponent<CardClickDetector>().CardMatch();
                 cardTwo.GetComponent<CardClickDetector>().CardMatch();
+                cardMatches++;
+                PlayCardMatchCorrectSound();
+                score += scorePerMatch * scoreMultiplier;
+                scoreText.text = score.ToString();
+
+                if (cardMatches == cards.Count / 2)
+                    GameOver();
+
+                scoreMultiplier++;
+                scoreMultiplierText.text = scoreMultiplier.ToString();
             }
             else
             {
                 cardOne.GetComponent<CardClickDetector>().HideCard();
                 cardTwo.GetComponent<CardClickDetector>().HideCard();
+                PlayCardMatchFailSound();
+                scoreMultiplier = 1;
+                scoreMultiplierText.text = scoreMultiplier.ToString();
             }
 
             cardOne = null;
@@ -176,5 +214,46 @@ public class GameManager : MonoBehaviour
         {
             return false;
         }
+    }
+
+    private void GameOver()
+    {
+        PlayGameOverSound();
+        finalScoreText.text = score.ToString();
+        GameOverScreen.SetActive(true);
+    }
+
+    public void PauseGame()
+    {
+        PauseScreen.SetActive(true);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void PlayCardFlipSound()
+    {
+        masterMixer.SetFloat("SFXVolume", 10);
+        SFXPlayer.PlayOneShot(cardFlipSFX);
+    }
+
+    public void PlayCardMatchCorrectSound()
+    {
+        masterMixer.SetFloat("SFXVolume", 10);
+        SFXPlayer.PlayOneShot(cardMatchCorrectSFX);
+    }
+
+    public void PlayCardMatchFailSound()
+    {
+        masterMixer.SetFloat("SFXVolume", 10);
+        SFXPlayer.PlayOneShot(cardMatchFailSFX);
+    }
+
+    public void PlayGameOverSound()
+    {
+        masterMixer.SetFloat("SFXVolume", 10);
+        SFXPlayer.PlayOneShot(gameOverSFX);
     }
 }

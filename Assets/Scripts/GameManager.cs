@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance = null;
 
     public Transform cardsContainer;
+    public Card[] cardTypes;
     public TMP_InputField gridColumnsInput;
     public TMP_InputField gridRowsInput;
     public TextMeshProUGUI errorText;
@@ -72,5 +73,62 @@ public class GameManager : MonoBehaviour
         {
             cards.Add(cardsContainer.GetChild(i).gameObject);
         }
+
+        SetupCards();
+    }
+
+    private void SetupCards()
+    {
+        int typesNeeded = cards.Count / 2;
+
+        List<Card> cardTypesSelected = new List<Card>(GetRandomCardTypes(cardTypes, typesNeeded));
+
+        int cardIndex = 0;
+
+        for (int  i = 0; i < cardTypesSelected.Count; i++)
+        {
+            cards[cardIndex].GetComponent<CardData>().AssignCardData(cardTypesSelected[i]);
+            cards[cardIndex+1].GetComponent<CardData>().AssignCardData(cardTypesSelected[i]);
+            cardIndex += 2;
+        }
+
+        ShuffleCards(cards);
+    }
+
+    private List<Card> GetRandomCardTypes(Card[] cardTypes, int numberOfTypes)
+    {
+        // Create a copy of cardTypes list
+        List<Card> cardTypesTempList = new List<Card>(cardTypes);
+
+        // Shuffle the list
+        for (int i = cardTypesTempList.Count - 1; i > 0; i--)
+        {
+            int randomIndex = Random.Range(0, i + 1);
+            Card temp = cardTypesTempList[i];
+            cardTypesTempList[i] = cardTypesTempList[randomIndex];
+            cardTypesTempList[randomIndex] = temp;
+        }
+
+        // Select number of types from shuffled type list
+        List<Card> selectedCardTypes = cardTypesTempList.GetRange(0, numberOfTypes);
+
+        return selectedCardTypes;
+    }
+
+    private void ShuffleCards(List<GameObject> passedCardList)
+    {
+        // Shuffle cards
+        for (int i = passedCardList.Count - 1; i > 0; i--)
+        {
+            int randomIndex = Random.Range(0, i + 1);
+            Card temp = passedCardList[i].GetComponent<CardData>().GetCardData();
+            passedCardList[i].GetComponent<CardData>().AssignCardData(passedCardList[randomIndex].GetComponent<CardData>().GetCardData());
+            passedCardList[randomIndex].GetComponent<CardData>().AssignCardData(temp);
+        }
+    }
+
+    public void Reshuffle()
+    {
+        ShuffleCards(cards);
     }
 }

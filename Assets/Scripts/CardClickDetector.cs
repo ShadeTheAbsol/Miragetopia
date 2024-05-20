@@ -42,5 +42,6 @@ public class CardClickDetector : MonoBehaviour
     public void CardMatch()
     {
         cardAnim.SetTrigger("CardMatch");
+        GameManager.instance.UpdateCardActiveStateList(GetComponent<CardData>().GetCardChildIndex());
     }
 }

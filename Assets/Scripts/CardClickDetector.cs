@@ -30,6 +30,7 @@ public class CardClickDetector : MonoBehaviour
     {
         cardAnim.SetTrigger("ShowCard");
         cardCol.enabled = false;
+        GameManager.instance.PlayCardFlipSound();
     }
 
     public void HideCard()

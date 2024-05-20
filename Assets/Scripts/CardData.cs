@@ -8,11 +8,14 @@ public class CardData : MonoBehaviour
 
     private string cardTitle;
     private Sprite cardSprite;
+    private int childIndex;
+    private bool cardActive;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        cardActive = true;
+        childIndex = transform.GetSiblingIndex();
     }
 
     public void AssignCardData(Card cardData)
@@ -38,6 +41,26 @@ public class CardData : MonoBehaviour
     public Sprite GetCardArt()
     {
         return cardSprite;
+    }
+
+    public int GetCardChildIndex()
+    {
+        return childIndex;
+    }
+
+    public void DeactivateCard()
+    {
+        cardActive = false;
+    }
+
+    public void SetCardActiveState(bool state)
+    {
+        cardActive = state;
+    }
+
+    public bool GetCardActiveState()
+    {
+        return cardActive;
     }
 
     public Card GetCardData()

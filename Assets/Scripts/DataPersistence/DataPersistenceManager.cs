@@ -51,8 +51,6 @@ public class DataPersistenceManager : MonoBehaviour
         {
             dataPersistenceObj.LoadData(gameData);
         }
-
-        Debug.Log("Grid Size Loaded: Columns: " + gameData.columns + " Rows: " + gameData.rows);
     }
 
     public void SaveGame()
@@ -62,7 +60,7 @@ public class DataPersistenceManager : MonoBehaviour
         {
             dataPersistenceObj.SaveData(gameData);
         }
-        Debug.Log("Grid Size Saved: Columns: " + gameData.columns + " Rows: " + gameData.rows);
+
         //Save the Save Data to a file using the data handler
         dataHandler.Save(gameData);
     }

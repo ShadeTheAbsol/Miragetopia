@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
 
     private CardGrid cardOrganizer;
     private List<GameObject> cards;
+    //Cards used to check for matching cards
+    private GameObject cardOne;
+    private GameObject cardTwo;
 
     private void Awake()
     {
@@ -130,5 +133,48 @@ public class GameManager : MonoBehaviour
     public void Reshuffle()
     {
         ShuffleCards(cards);
+    }
+
+    public void AssignCardsToCheck(GameObject passedCard)
+    {
+        if (cardOne == null)
+        {
+            cardOne = passedCard;
+            return;
+        }
+
+        if (cardTwo == null)
+        {
+            cardTwo = passedCard;
+
+            Card cardOneData = cardOne.GetComponent<CardData>().GetCardData();
+            Card cardTwoData = cardTwo.GetComponent<CardData>().GetCardData();
+
+            if (CheckCardsForMatch(cardOneData, cardTwoData))
+            {
+                cardOne.GetComponent<CardClickDetector>().CardMatch();
+                cardTwo.GetComponent<CardClickDetector>().CardMatch();
+            }
+            else
+            {
+                cardOne.GetComponent<CardClickDetector>().HideCard();
+                cardTwo.GetComponent<CardClickDetector>().HideCard();
+            }
+
+            cardOne = null;
+            cardTwo = null;
+        }
+    }
+
+    private bool CheckCardsForMatch(Card cardOneData, Card cardTwoData)
+    {
+        if (string.Equals(cardOneData.name, cardTwoData.name))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
